@@ -1,8 +1,5 @@
 # linetest
 
-
-## Projekt Leírás
-
 Ez egy egyszerű webkamera alkalmazás, amely lehetővé teszi, hogy képkockákat rögzíts, és lejátszd őket.
 
 
@@ -15,12 +12,12 @@ Ez egy egyszerű webkamera alkalmazás, amely lehetővé teszi, hogy képkockák
 
 ## Használat
 
-- Kattintson a "Kamera" gombra a webkamera engedélyezéséhez.
-- Használja a csúszkákat a stiftek helyének pozícionálásához.
-- Kattintson a "Rögzítés" gombra a képkockák rögzítéséhez.
-- Kattintson a "Lejátszás" gombra a képkockák lejátszásához.
-- Használja a csúszkákat a képkocka sebesség beállításához.
-- Kattintson a "Törlés" gombra a képkockák törléséhez.
+- Kattints a "Kamera" gombra a webkamera engedélyezéséhez.
+- Használd a csúszkákat a stiftek helyének pozícionálásához és a méretük beállításához.
+- Kattints a "Rögzítés" gombra, vagy nyomd meg az enter gombot új képkocka rögzítéséhez.
+- Kattints a "Lejátszás" gombra vagy nyomd meg a szóköz gombot a lejátszásához.
+- Használd a csúszkát a képkocka sebesség beállításához.
+- Kattints a "Törlés" gombra a képkockák törléséhez.
 - Kattints egy képkockára a kiválasztáshoz, ha onnan szzeretnéd indítani a lejátszást.
 
 ## Fejlesztői Információk
