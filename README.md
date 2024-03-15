@@ -25,8 +25,5 @@ Ez egy egyszerű webkamera alkalmazás, amely lehetővé teszi, hogy képkockák
 
 ## Fejlesztői Információk
 
-A projekt JavaScriptben íródott, és a HTML5 Video API-t használja a webkamera hozzáféréséhez és a képkockák rögzítéséhez. A projekt nem használ külső könyvtárakat vagy függőségeket.
+A projekt JavaScriptben íródott, és a HTML5 Video API-t használja a webkamera hozzáféréséhez és a képkockák rögzítéséhez. A projekt nem használ külső könyvtárakat.
 
-## Licenc
-
-Az alkalmazás nyílt forráskódú.
