@@ -3,25 +3,35 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Line Test App</title>
-	<!-- CSS fájlok importálása (ha szükséges) -->
+	<title>Linetest</title>
+	<meta name="description" content="Linetest">
+	<meta name="keywords" content="Linetest">
+	<meta name="author" content="Borbás Mátyás">
+	<meta name="robots" content="noindex, nofollow, noarchive">
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 	<div class="container">
 		<!-- Kamera képének és a lejátszott képkockáknak a megjelenítése -->
 		<div class="view">
+
+			<!-- Kamera képe -->
 			<div id="cameraView">
 				<video id="videoElement" autoplay></video>
+				<!-- Stiftek -->
 				<div class="overlay-circle" id="captureCircle_left"></div>
 				<div class="overlay-circle" id="captureCircle_right"></div>
 			</div>
 			
+			<!-- Lejátszott képkockák -->
 			<div id="playbackView">
+				<!-- Stiftek -->
 				<div class="overlay-circle" id="playbackCircle_left"></div>
 				<div class="overlay-circle" id="playbackCircle_right"></div>
 			</div>
+
 		</div>
+
 		<!-- Gombok a funkciókhoz -->
 		<div id="controls">
 			<button id="cameraButton">
@@ -56,11 +66,9 @@
 			
 
 		</div>
-			<!-- Képkockák sávja -->
+			<!-- Képkockák -->
 		<div id="frames"></div>	
 	</div>
-
-
 
 
 	<!-- JavaScript fájlok importálása -->

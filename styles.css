@@ -1,50 +1,47 @@
 html, body {
-	height: 100%; /* A dokumentum teljes magasságának beállítása */
+	height: 100%; 
 }
 
 body {
-	background-color: #171717; /* Sötét háttér */
-	color: #fff; /* Világos szövegszín */
-	font-family: Arial, sans-serif; /* Betűtípus */
-	margin: 0; /* Margó eltávolítása */
-	padding: 0; /* Padding eltávolítása */
+	background-color: #171717; 
+	color: #fff;
+	font-family: Arial, sans-serif; 
+	margin: 0; 
+	padding: 0;
 }
 
-
-
-
 .container {
-	display: flex; /* Flexbox használata az elemek elrendezéséhez */
-	flex-direction: column; /* Elemek függőleges sorokban */
-	flex-grow: 1; /* A konténer kitölti a rendelkezésre álló helyet */
-	align-items: stretch; /* Az elemek kitöltik a teljes szélességet */
+	display: flex; 
+	flex-direction: column; 
+	flex-grow: 1; 
+	align-items: stretch;
 	height: 100vh;
 }
 
 .view {
-	display: flex; /* Flexbox használata */
+	display: flex; 
 	flex-grow: 1;
-	justify-content: space-between; /* Térköz az elemek között */
-	padding: 5px; /* Belső térköz */
+	justify-content: space-between; 
+	padding: 5px; 
 }
 
 	#cameraView, #playbackView {
-		display: flex; /* Flexbox használata */
-		justify-content: center; /* Elemek középre igazítása */
-		align-items: center; /* Elemek középre igazítása */	
-		flex: 1; /* Az elemek egyenlő szélességűek */
-		margin: 5px; /* Külső térköz */
-		box-sizing: border-box; /* Box modell beállítása */
-		border: 1px solid rgba(255, 255, 255, 0.5); /* Világos keret (áttetszőséggel) */
-		border-radius: 10px; /* Lekerekített sarkok */
-		overflow: hidden; /* Tartalom levágása, ha túllépi a keretet */
-		background-color: black; /* Sötét háttér */
+		display: flex; 
+		justify-content: center; 
+		align-items: center; 
+		flex: 1;
+		margin: 5px; 
+		box-sizing: border-box; 
+		border: 1px solid rgba(255, 255, 255, 0.5); 
+		border-radius: 10px; 
+		overflow: hidden;
+		background-color: black;
 		position: relative; 
 	}
 
 		#cameraView video, #playbackView img {
-			width: 100%; /* Videó teljes szélessége */
-			height: auto; /* Videó magasságának automatikus beállítása */
+			width: 100%; 
+			height: auto; 
 		}
 
 		.overlay-circle {
@@ -84,27 +81,25 @@ body {
 
 
 #controls {
-	display: flex; /* Flexbox használata az elemek elrendezéséhez */
-	justify-content: center; /* Elemek középre igazítása vízszintesen */
-	padding: 20px; /* Belső térköz */
-	box-sizing: border-box; /* Box modell beállítása */
+	display: flex; 
+	justify-content: center; 
+	padding: 20px; 
+	box-sizing: border-box; 
 
 }
 
 
-
-
 #frames {
-	display: flex; /* Flexbox használata */
-	flex-wrap: nowrap; /* Megakadályozza a sortörést */
-	align-items: center; /* Középre igazítja az elemeket függőlegesen */
+	display: flex; 
+	flex-wrap: nowrap; 
+	align-items: center; 
 	width: 100%;
 	height: 100px;
 	background-color: black;
 	overflow-x: auto;
-	border-radius: 0px; /* Lekerekített sarkok */
+	border-radius: 0px; 
 	padding: 10px;
-	box-sizing: border-box; /* Box modell beállítása */
+	box-sizing: border-box; 
 }
 
 #frames img {
@@ -112,39 +107,40 @@ body {
 	width: auto;
 	max-height: 100%;
 	padding: 0px;
-	box-sizing: border-box; /* Box modell beállítása */
-	border: 1px solid #ccc; /* Világos keret */
-	border-radius: 10px; /* Lekerekített sarkok */
-	margin: 0 5px 0 5px; /* Külső térköz */
+	box-sizing: border-box;
+	border: 1px solid #ccc; 
+	border-radius: 10px; 
+	margin: 0 5px 0 5px; 
+	cursor: pointer;
 }
 
 .active {
-	border: 2px solid red !important; /* Vastag piros keret az aktív elemhez */
+	border: 2px solid red !important; 
 }
 
 .selected {
-    border: 2px solid blue !important; /* Vastag kék keret a kiválasztott elemhez */
+    border: 2px solid blue !important;
 }
 
 #controls button {
-	background-color: #fff; /* Világos háttér */
-	color: #333; /* Sötét szövegszín */
-	padding: 10px 20px; /* Belső térköz */
-	border: none; /* Keret eltávolítása */
-	border-radius: 10px; /* Lekerekített sarkok */
-	margin: 10px; /* Külső térköz */
-	cursor: pointer; /* Kurzor megváltoztatása */
+	background-color: #fff; 
+	color: #333; 
+	padding: 10px 20px; 
+	border: none; 
+	border-radius: 10px; 
+	margin: 10px; 
+	cursor: pointer; 
 }
 
 #controls #fpsRange {
-	width: 100px; /* Szélesség beállítása */
-	margin: 0 10px; /* Külső térköz */
+	width: 100px; 
+	margin: 0 10px; 
 }
 
 #controls label {
-	margin-right: 10px; /* Jobb oldali térköz */
+	margin-right: 10px; 
 }
 
 #controls button:disabled {
-	background-color: #ccc; /* Szürke háttér a letiltott gombokhoz */
+	background-color: #ccc; 
 }
