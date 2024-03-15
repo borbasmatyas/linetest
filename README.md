@@ -12,7 +12,7 @@ Ez egy egyszerű webkamera alkalmazás, amely lehetővé teszi, hogy képkockák
 
 ## Használat
 
-- Kattints a "Kamera" gombra a webkamera engedélyezéséhez.
+- Kattints a "Indítás" gombra a webkamera engedélyezéséhez (és engedélyezd is ha kérdezi)
 - Használd a csúszkákat a stiftek helyének pozícionálásához és a méretük beállításához.
 - Kattints a "Rögzítés" gombra, vagy nyomd meg az enter gombot új képkocka rögzítéséhez.
 - Kattints a "Lejátszás" gombra vagy nyomd meg a szóköz gombot a lejátszásához.
