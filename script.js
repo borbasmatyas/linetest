@@ -134,33 +134,37 @@ let playFrames; // Változó a setInterval visszatérési értékének tárolás
 let previousFrame; // Változó az előző képkocka tárolására
 
 playButton.addEventListener('click', function () {
-	let frameIndex = typeof selectedFrameIndex !== 'undefined' ? selectedFrameIndex : 0;
+    let frameIndex = typeof selectedFrameIndex !== 'undefined' ? selectedFrameIndex : 0;
 
-
-	// Képkockák lejátszása
-	playFrames = setInterval(function () {
-		if (frameIndex >= frames.length) {
-			clearInterval(playFrames); // Leállítjuk a lejátszást, ha az összes képkockát lejátszottuk
-		} else {
-			const img = document.createElement('img');
-			img.src = frames[frameIndex];
-			const playbackDiv = document.getElementById('playbackView');
-			playbackDiv.innerHTML = ''; // Eltávolítjuk az előző képkockát
-			playbackDiv.appendChild(img); // Hozzáadjuk az új képkockát
-
-			// Az aktív képkocka kiemelése
-			if (previousFrame) {
-				previousFrame.classList.remove('active');
+    // Képkockák lejátszása
+    playFrames = setInterval(function () {
+        if (frameIndex >= frames.length) {
+            clearInterval(playFrames); // Leállítjuk a lejátszást, ha az összes képkockát lejátszottuk
+        } else {
+            const img = new Image();
+            img.src = frames[frameIndex];
+			img.onload = function() {
+				const playbackCanvas = document.getElementById('playbackCanvas');
+				playbackCanvas.width = img.width;
+				playbackCanvas.height = img.height;
+				const ctx = playbackCanvas.getContext('2d');
+				ctx.clearRect(0, 0, playbackCanvas.width, playbackCanvas.height); // Eltávolítjuk az előző képkockát
+				ctx.drawImage(img, 0, 0); // Hozzáadjuk az új képkockát
 			}
-			previousFrame = framesDiv.children[frameIndex];
-			previousFrame.classList.add('active');
 
-			// Görgessünk az aktív képkockához
-			framesDiv.scrollLeft = previousFrame.offsetLeft - framesDiv.clientWidth / 2 + previousFrame.clientWidth / 2;
+            // Az aktív képkocka kiemelése
+            if (previousFrame) {
+                previousFrame.classList.remove('active');
+            }
+            previousFrame = framesDiv.children[frameIndex];
+            previousFrame.classList.add('active');
 
-			frameIndex++;
-		}
-	}, 1000 / fps); // Az intervallumot az FPS alapján számoljuk ki
+            // Görgessünk az aktív képkockához
+            framesDiv.scrollLeft = previousFrame.offsetLeft - framesDiv.clientWidth / 2 + previousFrame.clientWidth / 2;
+
+            frameIndex++;
+        }
+    }, 1000 / fps); // Az intervallumot az FPS alapján számoljuk ki
 });
 
 // Stop gomb eseménykezelő
