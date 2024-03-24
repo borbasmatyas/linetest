@@ -263,3 +263,55 @@ function updateCirclePositions() {
 	playbackCircleRight.style.width = sizeValue + 'px';
 	playbackCircleRight.style.height = sizeValue + 'px';
 }
+
+// Beállítások mentése
+function saveSettings() {
+	localStorage.setItem('xValue', xControl.value);
+	localStorage.setItem('yValue', yControl.value);
+	localStorage.setItem('sizeValue', sizeControl.value);
+	localStorage.setItem('fps', fps);
+}
+
+// Eseménykezelők hozzáadása a vezérlő elemekhez
+xControl.addEventListener('input', function() {
+	updateCirclePositions();
+	saveSettings();
+});
+
+yControl.addEventListener('input', function() {
+	updateCirclePositions();
+	saveSettings();
+});
+
+sizeControl.addEventListener('input', function() {
+	updateCirclePositions();
+	saveSettings();
+});
+
+fpsRange.addEventListener('input', function () {
+	fps = parseInt(this.value);
+	fpsValue.textContent = this.value; // Frissítjük az FPS értékét
+	saveSettings();
+});
+
+// LocalStorage-ból való beállítások betöltése
+function loadSettings() {
+	if (localStorage.getItem('xValue')) {
+		xControl.value = localStorage.getItem('xValue');
+	}
+	if (localStorage.getItem('yValue')) {
+		yControl.value = localStorage.getItem('yValue');
+	}
+	if (localStorage.getItem('sizeValue')) {
+		sizeControl.value = localStorage.getItem('sizeValue');
+	}
+	if (localStorage.getItem('fps')) {
+		fps = parseInt(localStorage.getItem('fps'));
+		fpsRange.value = fps;
+		fpsValue.textContent = fps;
+	}
+	updateCirclePositions();
+}
+
+// Betöltjük a beállításokat, amikor a dokumentum betöltődik
+document.addEventListener('DOMContentLoaded', loadSettings);
