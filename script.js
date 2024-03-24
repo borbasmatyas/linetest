@@ -471,14 +471,7 @@ function loadSettings() {
 	updateCirclePositions();
 }
 
-// Betöltjük a beállításokat, amikor a dokumentum betöltődik
-document.addEventListener('DOMContentLoaded', loadSettings);
 
-// Betöltjük a képkockákat, amikor a dokumentum betöltődik
-document.addEventListener('DOMContentLoaded', loadFramesContent);
-
-// Mentjük a képkockákat, amikor a dokumentum bezárul
-window.addEventListener('beforeunload', saveFramesContent);
 
 // Elmentjük a frames div tartalmát
 function saveFramesContent() {
@@ -493,3 +486,12 @@ function loadFramesContent() {
 		document.getElementById('frames').innerHTML = savedFramesContent;
 	}
 }
+
+// Betöltjük a beállításokat, amikor a dokumentum betöltődik
+document.addEventListener('DOMContentLoaded', loadSettings);
+
+// Betöltjük a képkockákat, amikor a dokumentum betöltődik
+document.addEventListener('DOMContentLoaded', loadFramesContent);
+
+// Folyamatosan mentjük a frames div tartalmát, ha változás történik
+document.getElementById('frames').addEventListener('DOMSubtreeModified', saveFramesContent);
