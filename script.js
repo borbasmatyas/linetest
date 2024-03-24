@@ -474,6 +474,12 @@ function loadSettings() {
 // Betöltjük a beállításokat, amikor a dokumentum betöltődik
 document.addEventListener('DOMContentLoaded', loadSettings);
 
+// Betöltjük a képkockákat, amikor a dokumentum betöltődik
+document.addEventListener('DOMContentLoaded', loadFramesContent);
+
+// Mentjük a képkockákat, amikor a dokumentum bezárul
+window.addEventListener('beforeunload', saveFramesContent);
+
 // Elmentjük a frames div tartalmát
 function saveFramesContent() {
 	var framesContent = document.getElementById('frames').innerHTML;
