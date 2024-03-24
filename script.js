@@ -75,10 +75,6 @@ navigator.mediaDevices.getUserMedia({ video: true })
 				option.value = device.deviceId;
 				option.text = device.label || 'Kamera ' + (cameraSelect.length + 1);
 				cameraSelect.appendChild(option);
-				const videoDevices = devices.filter(device => device.kind === 'videoinput');
-				if (videoDevices.length > 1) {
-					cameraSelect.style.display = 'block';
-				}
 			}
 		});
 	})
@@ -87,6 +83,13 @@ navigator.mediaDevices.getUserMedia({ video: true })
 	});
 
 
+// Várunk 3 másodpercet, és megnézzük, hány option eleme van a kamera választó selectnek
+setTimeout(function() {
+	if (cameraSelect.length > 1) {
+		// Ha több, mint 1 option elem van, akkor megjelenítjük a cameraSelector div-et
+		document.getElementById('cameraSelector').style.display = 'block';
+	}
+}, 3000);
 
 // Kamera gomb eseménykezelő
 cameraButton.addEventListener('click', function () {

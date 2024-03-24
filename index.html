@@ -36,22 +36,24 @@
 
 		</div>
 
-		<!-- Kamera választó -->
-		<div id="cameraSelector">
-			<select id="cameraSelect"></select>
-		</div>
+
 
 		<!-- Gombok a funkciókhoz -->
 		<div id="controls">
+			<!-- Kamera választó -->
+			<div id="cameraSelector">
+				<select id="cameraSelect"></select>
+			</div>
 			<button id="cameraButton">
 				Indítás
-			</button>
-			<label for="fpsRange">FPS: <span id="fpsValue">25</span></label>
-			<input type="range" id="fpsRange" min="1" max="30" step="1" value="15">
-			 
+			</button>			 
 			<button id="captureButton" disabled>
 				Rögzítés
 			</button>
+			<div class="ControllGroup">
+				<label for="fpsRange">FPS: <span id="fpsValue">25</span></label>
+				<input type="range" id="fpsRange" min="1" max="30" step="1" value="15">
+			</div>
 			<button id="playButton" disabled>
 				Lejátszás
 			</button>
@@ -63,15 +65,19 @@
 			</button>
 
 			<!-- Stift pozíciója -->
-			<label for="xControl">X: <span id="xValueDisplay">10</span></label>
-			<input type="range" id="xControl" min="0" max="45" value="10">
-			
-			<label for="yControl">Y: <span id="yValueDisplay">10</span></label>
-			<input type="range" id="yControl" min="0" max="80" value="10">
+			<div class="ControllGroup">
 
-			<!-- Stift mérete -->
-			<label for="sizeControl">Méret: <span id="sizeValueDisplay">10</span></label>
-			<input type="range" id="sizeControl" min="5" max="50" value="10">
+				<label for="xControl">X: <span id="xValueDisplay">10</span></label>
+				<input type="range" id="xControl" min="0" max="45" value="10">
+				
+				<label for="yControl">Y: <span id="yValueDisplay">10</span></label>
+				<input type="range" id="yControl" min="0" max="80" value="10">
+
+				<!-- Stift mérete -->
+				<label for="sizeControl">Méret: <span id="sizeValueDisplay">10</span></label>
+				<input type="range" id="sizeControl" min="5" max="50" value="10">
+
+			</div>
 			
 
 		</div>
