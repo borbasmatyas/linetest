@@ -25,12 +25,21 @@
 			
 			<!-- Lejátszott képkockák -->
 			<div id="playbackView">
+				<!-- Overlay képkocka -->
+				<div id="overlayFrame"></div>
+				<!-- Lejátszott képkockák -->
 				<canvas id="playbackCanvas"></canvas>
 				<!-- Stiftek -->
 				<div class="overlay-circle" id="playbackCircle_left"></div>
 				<div class="overlay-circle" id="playbackCircle_right"></div>
 			</div>
 
+		</div>
+
+		<!-- Kamera választó -->
+		<div id="cameraSelector">
+			<label for="cameraSelect">Kamera:</label>
+			<select id="cameraSelect"></select>
 		</div>
 
 		<!-- Gombok a funkciókhoz -->

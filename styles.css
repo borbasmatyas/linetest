@@ -42,15 +42,37 @@ body {
 		#cameraView video, #playbackView canvas {
 			width: 100%; 
 			height: auto; 
-			z-index: 1;
+			z-index: 10;
 		}
+
+
+		#overlayFrame {
+			width: 100%;
+			height: auto;
+			z-index: 15;
+			mix-blend-mode: multiply;
+			position: absolute;
+			opacity: 0.75;
+		}
+
+		#overlayFrame img {
+			width: 100%;
+			height: auto;
+		}
+
+		#playbackCanvas {
+			position: relative;
+			z-index: 10;
+		}
+
+
 
 		.overlay-circle {
 			position: absolute;
 			border-radius: 50%;
 			border: 1px solid rgba(255, 0, 0, 0.8);
 			background-color: rgba(255, 0, 0, 0.25);
-			z-index: 2;
+			z-index: 20;
 		}
 		
 		#captureCircle_left {
@@ -126,6 +148,12 @@ body {
     border: 2px solid blue !important;
 }
 
+.second-selected {
+	outline: 2px dashed cyan !important;
+}
+
+
+
 #controls button {
 	background-color: #fff; 
 	color: #333; 
@@ -153,3 +181,4 @@ body {
 #controls button:disabled:hover {
 	cursor: not-allowed; 
 }
+

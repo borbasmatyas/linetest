@@ -8,6 +8,9 @@ const stopButton = document.getElementById('stopButton');
 const clearButton = document.getElementById('clearButton');
 const cameraButton = document.getElementById('cameraButton');
 
+const controlsDiv = document.getElementById('controls');
+const buttons = controlsDiv.getElementsByTagName('button');
+
 // Canvas és context létrehozása
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
@@ -46,35 +49,73 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+let currentDeviceId;
+
+// Kamera választó elem lekérése
+const cameraSelect = document.getElementById('cameraSelect');
+
+cameraSelect.addEventListener('change', function() {
+	currentDeviceId = this.value;
+});
+
+// Médiaeszközök listázása
+navigator.mediaDevices.getUserMedia({ video: true })
+	.then(function(stream) {
+		// Leállítjuk a streamet, mert csak a kamera nevére van szükségünk
+		stream.getTracks().forEach(track => track.stop());
+
+		return navigator.mediaDevices.enumerateDevices();
+	})
+	.then(function(devices) {
+		devices.forEach(function(device) {
+			// Ha a device egy kamera
+			if (device.kind === 'videoinput') {
+				// Új option elem létrehozása a kamera számára
+				const option = document.createElement('option');
+				option.value = device.deviceId;
+				option.text = device.label || 'Kamera ' + (cameraSelect.length + 1);
+				cameraSelect.appendChild(option);
+			}
+		});
+	})
+	.catch(function(err) {
+		console.error('Hiba a médiaeszközök listázása közben:', err);
+	});
 
 // Kamera gomb eseménykezelő
 cameraButton.addEventListener('click', function () {
 	if (!isCameraOn) {
 		// Média engedély kérése a kamera hozzáféréséhez
-		navigator.mediaDevices.getUserMedia({ video: true })
+		navigator.mediaDevices.getUserMedia({ video: { deviceId: currentDeviceId } })
 			.then(function (stream) {
 				// Sikeresen megkaptuk a média streamet
 				// Beállítjuk a streamet a videó elem forrásaként
 				videoElement.srcObject = stream;
 				videoElement.play(); // A videó lejátszása
 
-				// Gombok engedélyezése a controls diven belül
-				const controlsDiv = document.getElementById('controls');
-				const buttons = controlsDiv.getElementsByTagName('button');
-				for (let i = 0; i < buttons.length; i++) {
-					buttons[i].disabled = false;
-				}
+				// Gombok engedélyezése a controls diven belül 3 másodperc késleltetéssel
+				setTimeout(function() {
+					for (let i = 1; i < buttons.length; i++) {
+						buttons[i].disabled = false;
+					}
+				}, 3000);
 
 				// Kamera gomb szövegének frissítése
 				cameraButton.textContent = 'Leállítás';
 				isCameraOn = true; // Kamera bekapcsolva
+
+				// Kameraváltó elem letiltása
+				cameraSelect.disabled = true;
+
 			})
 			.catch(function (error) {
 				console.error('Error accessing media devices:', error);
 
 				// Gombok letiltása
 				captureButton.disabled = true;
-				playButton.disabled = true;
+				if (frames.length === 0) {
+					playButton.disabled = true;
+				}
 			});
 	} else {
 		// Kamera leállítása
@@ -90,12 +131,28 @@ cameraButton.addEventListener('click', function () {
 		// Kamera gomb szövegének frissítése
 		cameraButton.textContent = 'Indítás';
 		isCameraOn = false; // Kamera leállítva
+
+		// Capture gomb letiltása
+		captureButton.disabled = true;
+
+		// Kameraváltó elem engedélyezése
+		cameraSelect.disabled = false;
+
+		// Letitljuk a vezérlőgombokat ha nincsenek képkockák
+		if (frames.length === 0) {
+			for (let i = 1; i < buttons.length; i++) {
+				buttons[i].disabled = true;
+			}
+		}
 	}
 });
 
 let selectedFrameIndex = 0; // Változó a kiválasztott képkocka indexének tárolására
 let selectedFrame; // Változó a kiválasztott képkocka tárolására
+let secondSelectedFrameIndex = null; // Változó a második kiválasztott képkocka indexének tárolására
+let secondSelectedFrame; // Változó a második kiválasztott képkocka tárolására
 
+// Képkocka készítése gomb eseménykezelő
 captureButton.addEventListener('click', function () {
 	canvas.width = videoElement.videoWidth;
 	canvas.height = videoElement.videoHeight;
@@ -107,20 +164,69 @@ captureButton.addEventListener('click', function () {
 
 	// Képkocka hozzáadása a DOM-hoz
 	const img = document.createElement('img');
-	img.src = capturedFrame;
-    img.addEventListener('click', function () {
-        // Kiválasztott képkocka kiemelésének eltávolítása
-        if (selectedFrame) {
-            selectedFrame.classList.remove('selected');
-        }
-        // Kiválasztott képkocka indexének beállítása
-        selectedFrameIndex = frames.indexOf(capturedFrame);
-        // Kiválasztott képkocka kiemelése
-        selectedFrame = framesDiv.children[selectedFrameIndex];
-        selectedFrame.classList.add('selected');
+    img.src = capturedFrame;
+    img.addEventListener('click', function (event) {
+		if (event.shiftKey) {
+			// Második kijelölés
+			if (secondSelectedFrame) {
+				// Ha a kijelölt képkocka már kijelölt, töröljük a kijelölést
+				if (frames.indexOf(capturedFrame) === secondSelectedFrameIndex) {
+					secondSelectedFrame.classList.remove('second-selected');
+					secondSelectedFrame = null;
+					secondSelectedFrameIndex = null;
+
+					// Töröljük az overlayFrame div tartalmát
+					document.getElementById('overlayFrame').innerHTML = '';
+				} else {
+					secondSelectedFrame.classList.remove('second-selected');
+					secondSelectedFrameIndex = frames.indexOf(capturedFrame);
+					secondSelectedFrame = framesDiv.children[secondSelectedFrameIndex];
+					secondSelectedFrame.classList.add('second-selected');
+
+					// Hozzáadás az overlayFrame divhez
+					const overlayFrame = document.getElementById('overlayFrame');
+					overlayFrame.innerHTML = ''; // Előző képkocka eltávolítása
+					const img = document.createElement('img');
+					img.src = capturedFrame;
+					overlayFrame.appendChild(img);
+				}
+			} else {
+				secondSelectedFrameIndex = frames.indexOf(capturedFrame);
+				secondSelectedFrame = framesDiv.children[secondSelectedFrameIndex];
+				secondSelectedFrame.classList.add('second-selected');
+
+				// Hozzáadás az overlayFrame divhez
+				const overlayFrame = document.getElementById('overlayFrame');
+				overlayFrame.innerHTML = ''; // Előző képkocka eltávolítása
+				const img = document.createElement('img');
+				img.src = capturedFrame;
+				overlayFrame.appendChild(img);
+			}
+		} else {
+			// Normál kijelölés
+			if (selectedFrame) {
+				selectedFrame.classList.remove('selected');
+			}
+			selectedFrameIndex = frames.indexOf(capturedFrame);
+			selectedFrame = framesDiv.children[selectedFrameIndex];
+			selectedFrame.classList.add('selected');
+
+			// Kép betöltése a playback canvasba
+			const playbackCanvas = document.getElementById('playbackCanvas');
+			const context = playbackCanvas.getContext('2d');
+			const img = new Image();
+			img.onload = function() {
+				playbackCanvas.width = img.width;
+				playbackCanvas.height = img.height;
+				context.clearRect(0, 0, playbackCanvas.width, playbackCanvas.height);
+				context.drawImage(img, 0, 0, playbackCanvas.width, playbackCanvas.height);
+			};
+			img.src = capturedFrame;
+		}
     });
-	const framesDiv = document.getElementById('frames');
-	framesDiv.appendChild(img);
+    const framesDiv = document.getElementById('frames');
+    framesDiv.appendChild(img);
+    
 
 	// Görgessünk a frames (idővonal) végére
 	setTimeout(() => {
@@ -128,6 +234,9 @@ captureButton.addEventListener('click', function () {
 	}, 3);
 
 });
+
+
+
 
 const framesDiv = document.getElementById('frames');
 let playFrames; // Változó a setInterval visszatérési értékének tárolására
@@ -177,9 +286,48 @@ stopButton.addEventListener('click', function () {
 
 // Clear gomb eseménykezelő
 clearButton.addEventListener('click', function () {
-	frames = []; // Töröljük a képkockákat
-	framesDiv.innerHTML = ''; // Töröljük a képkockákat a DOM-ból
-	playbackView.innerHTML = ''; // Töröljük a lejátszást
+	// Ha van second-selected képkocka
+	if (secondSelectedFrame) {
+		// Töröljük a second-selected képkockát a frames-ből
+		frames.splice(secondSelectedFrameIndex, 1);
+		// Töröljük a second-selected képkockát a DOM-ból
+		framesDiv.removeChild(framesDiv.children[secondSelectedFrameIndex]);
+		// Töröljük a second-selected kijelölést
+		secondSelectedFrame.classList.remove('second-selected');
+		// Töröljük az overlayFrame div tartalmát
+		const overlayFrame = document.getElementById('overlayFrame');
+		overlayFrame.innerHTML = '';
+		// Töröljük a helyi tárolóból a képkockákat
+		localStorage.setItem('framesContent', frames.join(','));
+		// Ürítjük a second-selected változókat
+		secondSelectedFrame = null;
+		secondSelectedFrameIndex = null;
+	} else {
+		// Töröljük a képkockákat
+		frames = [];
+		framesDiv.innerHTML = '';
+		// Töröljük a lejátszást a canvasból
+		const playbackCanvas = document.getElementById('playbackCanvas');
+		const context = playbackCanvas.getContext('2d');
+		context.clearRect(0, 0, playbackCanvas.width, playbackCanvas.height);
+		// Töröljük a kijelöléseket
+		if (selectedFrame) {
+			selectedFrame.classList.remove('selected');
+		}
+		// Töröljük az overlayFrame div tartalmát
+		const overlayFrame = document.getElementById('overlayFrame');
+		overlayFrame.innerHTML = '';
+		// Töröljük a helyi tárolóból a képkockákat
+		localStorage.removeItem('framesContent');
+	}
+
+	// Letiltjuk a vezérlőgombokat, ha nincs több képkocka és nem megy a kamera
+	if (frames.length === 0 && !isCameraOn) {
+		for (let i = 1; i < buttons.length; i++) {
+			buttons[i].disabled = true;
+		}
+	}
+
 });
 
 // Visszajelző elemek lekérése
@@ -315,3 +463,17 @@ function loadSettings() {
 
 // Betöltjük a beállításokat, amikor a dokumentum betöltődik
 document.addEventListener('DOMContentLoaded', loadSettings);
+
+// Elmentjük a frames div tartalmát
+function saveFramesContent() {
+	var framesContent = document.getElementById('frames').innerHTML;
+	localStorage.setItem('framesContent', framesContent);
+}
+
+// Visszatöltjük a frames div tartalmát
+function loadFramesContent() {
+	var savedFramesContent = localStorage.getItem('framesContent');
+	if (savedFramesContent) {
+		document.getElementById('frames').innerHTML = savedFramesContent;
+	}
+}
