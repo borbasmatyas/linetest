@@ -106,6 +106,22 @@ body {
 		}
 
 
+#cameraSelector {
+	display: none; 
+	justify-content: center; 
+	padding: 20px; 
+	box-sizing: border-box; 
+}
+
+#cameraSelector select {
+	padding: 10px; 
+	border-radius: 10px; 
+	border: none; 
+	background-color: #fff; 
+	color: #333; 
+	cursor: pointer; 
+}
+
 #controls {
 	display: flex; 
 	justify-content: center; 

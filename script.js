@@ -75,12 +75,18 @@ navigator.mediaDevices.getUserMedia({ video: true })
 				option.value = device.deviceId;
 				option.text = device.label || 'Kamera ' + (cameraSelect.length + 1);
 				cameraSelect.appendChild(option);
+				const videoDevices = devices.filter(device => device.kind === 'videoinput');
+				if (videoDevices.length > 1) {
+					cameraSelect.style.display = 'block';
+				}
 			}
 		});
 	})
 	.catch(function(err) {
 		console.error('Hiba a médiaeszközök listázása közben:', err);
 	});
+
+
 
 // Kamera gomb eseménykezelő
 cameraButton.addEventListener('click', function () {
@@ -144,6 +150,7 @@ cameraButton.addEventListener('click', function () {
 				buttons[i].disabled = true;
 			}
 		}
+		
 	}
 });
 
