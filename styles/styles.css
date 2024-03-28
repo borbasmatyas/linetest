@@ -1,0 +1,105 @@
+:root {
+	--color-background: #f0f0f0;
+	--color-primary: #0077cc;
+
+	--color-frame-border: rgba(255, 255, 255, 0.0);
+    --color-active-frame: rgba(185, 0, 0, 1);
+    --color-start-frame: rgb(0, 0, 255);
+    --color-overlay-frame: rgb(0, 255, 255);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Teljes képernyős magasság */
+}
+
+.view {
+    display: flex;
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+    position: relative; 
+}
+
+.camera-container,
+.playback-container {
+    flex: 1;
+    align-items: center;
+    align-content: center;
+    margin: 5px;
+    position: relative;
+}
+  
+
+#canvas-target {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+video, canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+
+}
+
+    canvas.overlay {
+        position: absolute;
+        z-index: 1000;
+    }
+
+
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.controls-container button {
+    margin-right: 10px;
+}
+
+#timeline {
+    display: flex;
+    overflow-x: auto; /* Idővonal görgetése */
+    padding: 10px;
+    background-color: #e0e0e0;
+	height: 100px;
+}
+
+#timeline img {
+    width: auto;
+    height: 100%;
+    margin: 2px 5px 2px 5px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: white;
+    box-sizing: border-box;
+}
+
+#timeline img.active {
+    border: 2px solid var(--color-active-frame);
+}
+
+#timeline img.selected {
+    border: 1px dashed var(--color-selected-frame);
+}
+
+#timeline img.secondary-selected {
+    outline: 2px dotted var(--color-overlay-frame);
+}
+
+.hidden {
+    display: none;
+}

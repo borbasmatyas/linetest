@@ -8,85 +8,121 @@
 	<meta name="keywords" content="Linetest">
 	<meta name="author" content="Borbás Mátyás">
 	<meta name="robots" content="noindex, nofollow, noarchive">
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="styles/styles.css">
+	<link rel="stylesheet" href="styles/PositionPinsOverlay.css">
 </head>
 <body>
-	<div class="container">
+	<main>
 		<!-- Kamera képének és a lejátszott képkockáknak a megjelenítése -->
 		<div class="view">
 
 			<!-- Kamera képe -->
-			<div id="cameraView">
-				<video id="videoElement" autoplay></video>
-				<!-- Stiftek -->
-				<div class="overlay-circle" id="captureCircle_left"></div>
-				<div class="overlay-circle" id="captureCircle_right"></div>
+			<div class="camera-container" id="video-target">
+				<!-- Ide jön egy elem, amiben a kamera képe lesz -->	
+
+				<!-- Pozícionáló stift overlay -->	
+				<div class="position-pin" id="left-pin"></div>
+				<div class="position-pin" id="right-pin"></div>
+
 			</div>
 			
 			<!-- Lejátszott képkockák -->
-			<div id="playbackView">
-				<!-- Overlay képkocka -->
-				<div id="overlayFrame"></div>
-				<!-- Lejátszott képkockák -->
-				<canvas id="playbackCanvas"></canvas>
-				<!-- Stiftek -->
-				<div class="overlay-circle" id="playbackCircle_left"></div>
-				<div class="overlay-circle" id="playbackCircle_right"></div>
+			<div class="playback-container" id="canvas-target">
+				<canvas class="main" id="canvas"></canvas>
 			</div>
 
 		</div>
 
+		<div class="controls-container">
 
-
-		<!-- Gombok a funkciókhoz -->
-		<div id="controls">
-			<!-- Kamera választó -->
-			<div id="cameraSelector">
-				<select id="cameraSelect"></select>
+			<!-- Bállítások (modal) -->
+			<div id="camera-settings">
+				<button id="cameraInit">
+					Kamerák inicializálása
+				</button>	
+				<select id="videoSource" disabled>
+					<!-- Ide jönnek a kamerák -->
+				</select>
+				<select id="fps" disabled>
+					<option value="7">7 fps</option>
+					<option value="15">15 fps</option>
+					<option value="24" selected>24 fps</option>
+					<option value="30">30 fps</option>
+					<option value="60">60 fps</option>
+				</select>
+				<div class="position-pins-settings">
+					<label for="pinSize">d: <span id="pinSizeValue"></span></label>
+					<input type="range" id="pinSize" min="10" max="30" value="10">
+					<label for="topOffset">x: <span id="topOffsetValue"></span></label>
+					<input type="range" id="topOffset" min="10" max="50" value="15">
+					<label for="sideOffset">y: <span id="sideOffsetValue"></span></label>
+					<input type="range" id="sideOffset" min="10" max="50" value="40">
+				</div>
+				<button id="clearSettings">
+					Alapértelmezett beállítások visszaállítása
+				</button>
+				<div id="calibrate-camera">
+					<button id="calibrateButton" disabled>
+						Kalibrálás
+					</button>
+					<button id="clearCalibrationButton">
+						Kalibrálás törlése
+					</button>
+					<!-- Fekete fehér mód be/ki kapcsolása -->
+					<input type="checkbox" id="bwMode" disabled>
+					<!-- alsó és felső határérték beállítása -->
+					<label for="lowerThreshold">Alsó határérték: <span id="lowerThresholdValue"></span></label>
+					<input type="range" id="lowerThreshold" min="0" max="255" value="180" disabled>
+					<label for="upperThreshold">Felső határérték: <span id="upperThresholdValue"></span></label>
+					<input type="range" id="upperThreshold" min="0" max="255" value="150" disabled>
+				</div>
 			</div>
-			<button id="cameraButton">
-				Indítás
-			</button>			 
-			<button id="captureButton" disabled>
-				Rögzítés
-			</button>
-			<div class="ControllGroup">
-				<label for="fpsRange">FPS: <span id="fpsValue">25</span></label>
-				<input type="range" id="fpsRange" min="1" max="30" step="1" value="15">
+
+			<!-- Vezérlő elemek -->
+			<div id="capture-control">
+				<button id="cameraButton" disabled>
+					Indítás
+				</button>			 
+				<button id="captureButton" disabled>
+					Rögzítés
+				</button>
+				<button id="changeView">
+					Nézet váltás
+				</button>
 			</div>
-			<button id="playButton" disabled>
-				Lejátszás
-			</button>
-			<button id="stopButton" disabled>
-				Megállítás
-			</button>
-			<button id="clearButton" disabled>
-				Törlés
-			</button>
-
-			<!-- Stift pozíciója -->
-			<div class="ControllGroup">
-
-				<label for="xControl">X: <span id="xValueDisplay">10</span></label>
-				<input type="range" id="xControl" min="0" max="45" value="10">
-				
-				<label for="yControl">Y: <span id="yValueDisplay">10</span></label>
-				<input type="range" id="yControl" min="0" max="80" value="10">
-
-				<!-- Stift mérete -->
-				<label for="sizeControl">Méret: <span id="sizeValueDisplay">10</span></label>
-				<input type="range" id="sizeControl" min="5" max="50" value="10">
-
+			<div id="playback-control">
+				<button id="playButton" disabled>
+					Lejátszás / Szünet
+				</button>
+				<button id="stopButton" disabled>
+					Megállítás (vissza az elejére)
+				</button>
+				<button id="clearFrames" disabled>
+					Képkockák törlése
+				</button>
 			</div>
-			
+
 
 		</div>
-			<!-- Képkockák -->
-		<div id="frames"></div>	
-	</div>
+
+		<!-- Képkockák -->
+		<div id="timeline">
+			<!-- Ide jönnek a képkockák -->
+		</div>	
+
+	</main>
 
 
-	<!-- JavaScript fájlok importálása -->
-	<script src="script.js"></script>
+	<!-- JavaScript fájlok  -->
+	<script src="scripts/scripts.js"></script>
+
+	<script src="scripts/LocalStorage.js"></script>
+	<script>
+
+	</script>
+	<script src="scripts/Camera.js"></script>
+	<script src="scripts/ThresholdCalibration.js"></script>
+	<script src="scripts/Playback.js"></script>
+	<script src="scripts/PositionPinsOverlay.js"></script>
 </body>
 </html>
