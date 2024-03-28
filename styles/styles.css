@@ -99,3 +99,7 @@ video, canvas {
 #timeline img.secondary-selected {
     outline: 2px dotted var(--color-overlay-frame);
 }
+
+.hidden {
+    display: none;
+}

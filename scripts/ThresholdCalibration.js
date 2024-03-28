@@ -44,3 +44,5 @@ clearCalibrationButton.addEventListener('click', () => {
 	// Újratöltjük az oldalt
 	location.reload();
 });
+
+

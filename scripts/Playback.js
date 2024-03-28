@@ -3,12 +3,40 @@ class Playback {
         this.playbackInterval = null;
         this.playButton = document.getElementById('playButton');
         this.playButton.addEventListener('click', () => this.playback());
+		this.stopButton = document.getElementById('stopButton');
+		this.clearFramesButton = document.getElementById('clearFrames');
+
+		this.clearSettingsButton = document.getElementById('clearSettings');
+		this.clearCalibrationButton = document.getElementById('clearCalibrationButton');
+
+		this.secondarySelected = null;
+		this.selected = null;
+		this.frameNumber = null;
+
+		// Megállítjuk a lejátszást, ha a stop gombra kattintunk
+        this.stopButton.addEventListener('click', () => {
+            if (this.playbackInterval) {
+                clearInterval(this.playbackInterval);
+                this.playbackInterval = null;
+                this.resetFrameIndex();
+            }
+        });
 
         // Figyeljük a timeline gyermek elemeinek számát
         const timeline = document.getElementById('timeline');
         new MutationObserver(() => {
-            // Ha van legalább egy kép, engedélyezzük a gombot
+            // Ha van legalább egy kép, engedélyezzük a lejátszás gombot
             this.playButton.disabled = timeline.children.length === 0;
+
+			// Ha van legalább egy kép, engedélyezzük a képkocka törlés gombot
+			this.clearFramesButton.disabled = timeline.children.length === 0;
+			
+			// Ha van legalább egy elem, letiltjuk a clearSettings gombot
+			this.clearSettingsButton.disabled = timeline.children.length !== 0;
+
+			// Ha van legalább egy elem, letiltjuk a clearThreshold gombot
+			this.clearCalibrationButton.disabled = timeline.children.length !== 0;
+
         }).observe(timeline, { childList: true });
 
         // Kijelölés kezelése
@@ -25,17 +53,32 @@ class Playback {
 		// Másodlagos kijelölés kezelése
         timeline.addEventListener('click', (event) => {
             if (event.shiftKey && event.target.tagName === 'IMG') {
-                const secondarySelected = timeline.querySelector('.secondary-selected');
-                if (secondarySelected) {
-                    secondarySelected.classList.remove('secondary-selected');
+                this.secondarySelected = timeline.querySelector('.secondary-selected');
+                if (this.secondarySelected) {
+                    this.secondarySelected.classList.remove('secondary-selected');
                     this.clearOverlay();
+					this.secondarySelected = null;
+					this.frameNumber = null;
                 }
-                if (secondarySelected !== event.target) {
+                if (this.secondarySelected !== event.target) {
                     event.target.classList.add('secondary-selected');
                     this.setOverlay(event.target.src);
+					
+					// Képkocka sorszámának meghatározása
+					const frames = Array.from(timeline.children);
+					this.frameNumber = frames.findIndex(frame => frame === event.target);
+
                 }
             }
         });
+
+		// Képkockák törlése
+		this.clearFramesButton.addEventListener('click', () => {
+			this.clearFrames(this.frameNumber);
+		});
+
+
+
     }
 
 	playback() {
@@ -60,8 +103,16 @@ class Playback {
 		if (this.playbackInterval) {
 			clearInterval(this.playbackInterval);
 			this.playbackInterval = null;
+			this.playButton.textContent = 'Lejátszás';
+			this.stopButton.setAttribute('disabled', 'disabled');
 			return;
 		}
+	
+		this.playButton.textContent = 'Szünet';
+
+		// Stop gomb engedélyezése
+		this.stopButton.removeAttribute('disabled');
+	
 
 		this.playbackInterval = setInterval(() => {
 			if (frameIndex >= frames.length) {
@@ -94,6 +145,13 @@ class Playback {
 
 
 			frameIndex++;
+			if (frameIndex >= frames.length) {
+				clearInterval(this.playbackInterval);
+				this.playbackInterval = null;
+				this.playButton.textContent = 'Lejátszás';
+				this.stopButton.setAttribute('disabled', 'disabled');
+				frames[frameIndex - 1].classList.remove('active');		
+			}
 		}, frameDuration);
 	}
 
@@ -123,6 +181,27 @@ class Playback {
             context.clearRect(0, 0, overlay.width, overlay.height);
         }
     }
+
+	resetFrameIndex() {
+        const timeline = document.getElementById('timeline');
+        const frames = Array.from(timeline.children);
+        this.frameIndex = frames.findIndex(frame => frame.classList.contains('selected'));
+        if (this.frameIndex === -1) {
+            this.frameIndex = 0;
+        }
+    }
+
+	clearFrames(selected) {
+		const timeline = document.getElementById('timeline');
+		if (selected !== undefined && selected !== null && Number.isInteger(selected)) {
+			if (selected >= 0 && selected < timeline.children.length) {
+				timeline.children[selected].remove();
+			}
+		} else {
+			timeline.innerHTML = '';
+		}
+	}
+
 }
 
 const playback = new Playback();
