@@ -34,6 +34,7 @@ main {
     align-content: center;
     margin: 5px;
     position: relative;
+    display: flex;
 }
   
 
